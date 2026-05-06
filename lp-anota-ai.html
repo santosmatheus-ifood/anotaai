@@ -1,0 +1,920 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Anota AI — Gestão completa do seu restaurante</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+
+    /* ═══════════════════════════════════════════
+       DESIGN TOKENS — Captação Self / AnotaAI
+    ═══════════════════════════════════════════ */
+    :root {
+      --ifood-red:        #EA1D2C;
+      --ifood-dark-red:   #B0121E;
+      --ifood-bg:         #F7F7F7;
+      --text-primary:     #333333;
+      --text-secondary:   #6b7280;
+      --border-gray:      #e5e7eb;
+      --bg-white:         #ffffff;
+      --bg-light-red:     #fff5f5;
+      --bg-lighter-red:   #ffebee;
+      --gray-50:  #f9fafb;
+      --gray-100: #f3f4f6;
+      --gray-200: #e5e7eb;
+      --gray-300: #d1d5db;
+      --gray-400: #9ca3af;
+      --gray-500: #6b7280;
+      --gray-600: #4b5563;
+      --gray-700: #374151;
+      --gray-800: #1f2937;
+      --gray-900: #111827;
+    }
+
+    /* ═══════════════════════════════════════════
+       RESET
+    ═══════════════════════════════════════════ */
+    *, *::before, *::after {
+      margin: 0; padding: 0; box-sizing: border-box;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background-color: var(--ifood-bg);
+      color: var(--text-primary);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    /* ═══════════════════════════════════════════
+       HEADER / NAVBAR
+    ═══════════════════════════════════════════ */
+    .header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background-color: var(--bg-white);
+      border-bottom: 1px solid var(--border-gray);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+
+    .header-inner {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 3rem;
+      height: 72px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 2rem;
+    }
+
+    /* Logo */
+    .logo-wrap {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      text-decoration: none;
+      flex-shrink: 0;
+    }
+
+    .logo-icon {
+      width: 36px;
+      height: 36px;
+      background: linear-gradient(135deg, var(--ifood-red) 0%, var(--ifood-dark-red) 100%);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 800;
+      font-size: 1.1rem;
+      letter-spacing: -0.5px;
+      box-shadow: 0 2px 8px rgba(234,29,44,0.3);
+    }
+
+    .logo-name {
+      font-size: 1.375rem;
+      font-weight: 800;
+      color: var(--gray-900);
+      letter-spacing: -0.3px;
+    }
+
+    .logo-name span {
+      color: var(--ifood-red);
+    }
+
+    /* Nav Links */
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+      list-style: none;
+    }
+
+    .nav-link {
+      padding: 0.625rem 1.125rem;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--gray-700);
+      text-decoration: none;
+      border-radius: 8px;
+      transition: all 0.2s ease;
+      border: 1.5px solid transparent;
+      white-space: nowrap;
+    }
+
+    .nav-link:hover {
+      color: var(--ifood-red);
+      background-color: var(--bg-light-red);
+    }
+
+    .nav-link.nav-cta {
+      background: linear-gradient(135deg, var(--ifood-red) 0%, var(--ifood-dark-red) 100%);
+      color: white;
+      border-color: transparent;
+      box-shadow: 0 2px 8px rgba(234,29,44,0.3);
+      margin-left: 0.5rem;
+    }
+
+    .nav-link.nav-cta:hover {
+      box-shadow: 0 4px 16px rgba(234,29,44,0.45);
+      transform: translateY(-1px);
+      background: linear-gradient(135deg, var(--ifood-red) 0%, var(--ifood-dark-red) 100%);
+      color: white;
+    }
+
+    /* ═══════════════════════════════════════════
+       HERO / FOLD
+    ═══════════════════════════════════════════ */
+    .hero {
+      min-height: calc(100vh - 72px);
+      background: linear-gradient(160deg, var(--ifood-red) 0%, var(--ifood-dark-red) 52%, #7a0b14 100%);
+      position: relative;
+      display: flex;
+      align-items: center;
+      overflow: hidden;
+    }
+
+    /* Noise/pattern overlay */
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        radial-gradient(circle at 20% 50%, rgba(255,255,255,0.06) 0%, transparent 55%),
+        radial-gradient(circle at 80% 20%, rgba(255,255,255,0.04) 0%, transparent 45%);
+      pointer-events: none;
+    }
+
+    /* Decorative circle */
+    .hero::after {
+      content: '';
+      position: absolute;
+      right: -120px;
+      bottom: -120px;
+      width: 520px;
+      height: 520px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.04);
+      pointer-events: none;
+    }
+
+    .hero-inner {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 5rem 3rem;
+      width: 100%;
+      display: grid;
+      grid-template-columns: 1fr 480px;
+      gap: 5rem;
+      align-items: center;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ── Left: Copy ── */
+    .hero-copy {}
+
+    .hero-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background-color: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.25);
+      color: white;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      padding: 0.375rem 1rem;
+      border-radius: 20px;
+      margin-bottom: 1.75rem;
+    }
+
+    .hero-eyebrow::before {
+      content: '';
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.9);
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50%       { opacity: 0.5; transform: scale(0.8); }
+    }
+
+    .hero-headline {
+      font-size: clamp(2rem, 3.5vw, 3rem);
+      font-weight: 800;
+      color: white;
+      line-height: 1.2;
+      margin-bottom: 1.5rem;
+      letter-spacing: -0.5px;
+    }
+
+    .hero-headline .highlight {
+      position: relative;
+      display: inline-block;
+      color: white;
+    }
+
+    .hero-headline .highlight::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      bottom: 2px;
+      width: 100%;
+      height: 3px;
+      background: rgba(255,255,255,0.5);
+      border-radius: 2px;
+    }
+
+    .hero-sub {
+      font-size: 1.05rem;
+      color: rgba(255,255,255,0.85);
+      font-weight: 400;
+      line-height: 1.7;
+      margin-bottom: 2.5rem;
+      max-width: 520px;
+    }
+
+    /* CTA Buttons */
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      align-items: center;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.9375rem 1.75rem;
+      border-radius: 8px;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      border: none;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    .btn-hero-primary {
+      background-color: white;
+      color: var(--ifood-red);
+      box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+    }
+
+    .btn-hero-primary:hover {
+      box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+      transform: translateY(-2px);
+    }
+
+    .btn-hero-secondary {
+      background-color: rgba(255,255,255,0.15);
+      color: white;
+      border: 1.5px solid rgba(255,255,255,0.4);
+    }
+
+    .btn-hero-secondary:hover {
+      background-color: rgba(255,255,255,0.22);
+      border-color: rgba(255,255,255,0.65);
+      transform: translateY(-2px);
+    }
+
+    /* Trust badge */
+    .hero-trust {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-top: 2.5rem;
+      padding-top: 2rem;
+      border-top: 1px solid rgba(255,255,255,0.15);
+    }
+
+    .trust-avatars {
+      display: flex;
+    }
+
+    .trust-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      border: 2px solid rgba(255,255,255,0.8);
+      background: rgba(255,255,255,0.25);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: white;
+      margin-left: -8px;
+    }
+
+    .trust-avatar:first-child { margin-left: 0; }
+
+    .trust-text {
+      font-size: 0.8rem;
+      color: rgba(255,255,255,0.8);
+      font-weight: 500;
+      line-height: 1.4;
+    }
+
+    .trust-text strong {
+      color: white;
+      font-weight: 700;
+    }
+
+    /* ── Right: Form ── */
+    .hero-form-card {
+      background-color: var(--bg-white);
+      border-radius: 16px;
+      padding: 2.5rem;
+      box-shadow: 0 25px 50px rgba(0,0,0,0.25);
+      position: relative;
+    }
+
+    /* Red top accent */
+    .hero-form-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 2rem; right: 2rem;
+      height: 4px;
+      background: linear-gradient(90deg, var(--ifood-red), var(--ifood-dark-red));
+      border-radius: 0 0 4px 4px;
+    }
+
+    .form-header {
+      margin-bottom: 1.75rem;
+    }
+
+    .form-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.375rem;
+      background-color: var(--bg-lighter-red);
+      color: var(--ifood-red);
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      padding: 0.25rem 0.75rem;
+      border-radius: 20px;
+      margin-bottom: 0.875rem;
+    }
+
+    .form-title {
+      font-size: 1.375rem;
+      font-weight: 800;
+      color: var(--gray-900);
+      line-height: 1.3;
+      margin-bottom: 0.375rem;
+    }
+
+    .form-subtitle {
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+      font-weight: 400;
+    }
+
+    /* Form fields */
+    .form-group {
+      margin-bottom: 1.125rem;
+    }
+
+    .form-label {
+      display: block;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--gray-700);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 0.4rem;
+    }
+
+    .form-label .required {
+      color: var(--ifood-red);
+      margin-left: 2px;
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 0.875rem 1rem;
+      border: 1.5px solid var(--border-gray);
+      border-radius: 8px;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.9rem;
+      color: var(--text-primary);
+      background-color: var(--bg-white);
+      transition: all 0.2s ease;
+      font-weight: 500;
+      outline: none;
+    }
+
+    .form-input::placeholder {
+      color: var(--gray-400);
+      font-weight: 400;
+    }
+
+    .form-input:focus {
+      border-color: var(--ifood-red);
+      box-shadow: 0 0 0 3px rgba(234,29,44,0.1);
+    }
+
+    /* Faturamento — Radio as chips */
+    .faturamento-label {
+      display: block;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--gray-700);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 0.625rem;
+    }
+
+    .faturamento-label .required {
+      color: var(--ifood-red);
+      margin-left: 2px;
+    }
+
+    .faturamento-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.5rem;
+    }
+
+    .faturamento-option {
+      position: relative;
+    }
+
+    .faturamento-option input[type="radio"] {
+      position: absolute;
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .faturamento-option label {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 0.75rem 0.5rem;
+      border: 1.5px solid var(--border-gray);
+      border-radius: 8px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--gray-600);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      background-color: var(--gray-50);
+      line-height: 1.3;
+      gap: 0.375rem;
+    }
+
+    .faturamento-option label:hover {
+      border-color: var(--ifood-red);
+      color: var(--ifood-red);
+      background-color: var(--bg-light-red);
+    }
+
+    .faturamento-option input[type="radio"]:checked + label {
+      border-color: var(--ifood-red);
+      background-color: var(--bg-lighter-red);
+      color: var(--ifood-red);
+      font-weight: 700;
+      box-shadow: 0 0 0 3px rgba(234,29,44,0.1);
+    }
+
+    .faturamento-option input[type="radio"]:checked + label::before {
+      content: '✓ ';
+      font-weight: 800;
+    }
+
+    /* Submit button */
+    .btn-form-submit {
+      width: 100%;
+      padding: 1rem 1.75rem;
+      background: linear-gradient(135deg, var(--ifood-red) 0%, var(--ifood-dark-red) 100%);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 16px rgba(234,29,44,0.35);
+      margin-top: 1.375rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      letter-spacing: 0.2px;
+    }
+
+    .btn-form-submit:hover {
+      box-shadow: 0 8px 24px rgba(234,29,44,0.45);
+      transform: translateY(-2px);
+    }
+
+    .btn-form-submit:active {
+      transform: translateY(0);
+    }
+
+    .form-disclaimer {
+      font-size: 0.72rem;
+      color: var(--gray-400);
+      text-align: center;
+      margin-top: 0.875rem;
+      line-height: 1.5;
+    }
+
+    /* ═══════════════════════════════════════════
+       SUCCESS STATE (hidden by default)
+    ═══════════════════════════════════════════ */
+    .form-success {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 2rem 1rem;
+      gap: 1rem;
+    }
+
+    .form-success.active {
+      display: flex;
+    }
+
+    .success-icon {
+      width: 64px;
+      height: 64px;
+      background: linear-gradient(135deg, var(--ifood-red), var(--ifood-dark-red));
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.75rem;
+      box-shadow: 0 8px 24px rgba(234,29,44,0.35);
+    }
+
+    .success-title {
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: var(--gray-900);
+    }
+
+    .success-text {
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    /* ═══════════════════════════════════════════
+       RESPONSIVE
+    ═══════════════════════════════════════════ */
+    @media (max-width: 1100px) {
+      .hero-inner {
+        grid-template-columns: 1fr 440px;
+        gap: 3.5rem;
+        padding: 4rem 2rem;
+      }
+      .hero-headline { font-size: 2.25rem; }
+    }
+
+    @media (max-width: 900px) {
+      .header-inner { padding: 0 1.5rem; }
+
+      .nav-links .nav-link:not(.nav-cta) { display: none; }
+
+      .hero-inner {
+        grid-template-columns: 1fr;
+        gap: 3rem;
+        padding: 3rem 1.5rem 4rem;
+        text-align: center;
+      }
+
+      .hero-headline { font-size: 2rem; }
+      .hero-sub { max-width: 100%; }
+      .hero-actions { justify-content: center; }
+      .hero-trust { justify-content: center; }
+      .hero-form-card { max-width: 480px; margin: 0 auto; }
+    }
+
+    @media (max-width: 480px) {
+      .faturamento-grid { grid-template-columns: 1fr; }
+      .hero-actions { flex-direction: column; align-items: stretch; }
+      .btn { justify-content: center; }
+      .hero-headline { font-size: 1.75rem; }
+    }
+
+  </style>
+</head>
+<body>
+
+  <!-- ═══════════════════════════════════════════
+       HEADER
+  ═══════════════════════════════════════════ -->
+  <header class="header">
+    <div class="header-inner">
+
+      <!-- Logo -->
+      <a class="logo-wrap" href="#">
+        <div class="logo-icon">AI</div>
+        <span class="logo-name">Anota <span>AI</span></span>
+      </a>
+
+      <!-- Nav -->
+      <nav>
+        <ul class="nav-links">
+          <li><a class="nav-link" href="#funcionalidades">Funcionalidades</a></li>
+          <li><a class="nav-link" href="#planos">Planos</a></li>
+          <li><a class="nav-link nav-cta" href="#contratar">Contratar Agora →</a></li>
+        </ul>
+      </nav>
+
+    </div>
+  </header>
+
+  <!-- ═══════════════════════════════════════════
+       HERO — Única Dobra
+  ═══════════════════════════════════════════ -->
+  <section class="hero" id="contratar">
+    <div class="hero-inner">
+
+      <!-- ── LEFT: Copy & CTAs ── -->
+      <div class="hero-copy">
+
+        <div class="hero-eyebrow">
+          Gestão para Restaurantes
+        </div>
+
+        <h1 class="hero-headline">
+          Economize tempo e dinheiro com uma gestão completa do seu restaurante, chame o <span class="highlight">João</span>
+        </h1>
+
+        <p class="hero-sub">
+          O João cuida de tudo para você — pedidos, cardápio digital, relatórios e muito mais. Tudo em uma plataforma simples, pensada para o seu negócio crescer.
+        </p>
+
+        <div class="hero-actions">
+          <a class="btn btn-hero-primary" href="#contratar">
+            🚀 Contratar Agora
+          </a>
+          <a class="btn btn-hero-secondary" href="#especialista">
+            💬 Falar com um Especialista
+          </a>
+        </div>
+
+        <div class="hero-trust">
+          <div class="trust-avatars">
+            <div class="trust-avatar">MR</div>
+            <div class="trust-avatar">CS</div>
+            <div class="trust-avatar">JL</div>
+            <div class="trust-avatar">+</div>
+          </div>
+          <div class="trust-text">
+            <strong>+12.000 restaurantes</strong> já usam o Anota AI<br>
+            e economizam horas todo dia 🎉
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ── RIGHT: Form ── -->
+      <div class="hero-form-card" id="funcionalidades">
+
+        <div class="form-header">
+          <div class="form-tag">✦ Grátis por 7 dias</div>
+          <div class="form-title">Comece a testar agora</div>
+          <div class="form-subtitle">Sem cartão de crédito. Cancele quando quiser.</div>
+        </div>
+
+        <form id="trialForm" novalidate>
+
+          <!-- Nome -->
+          <div class="form-group">
+            <label class="form-label" for="nome">Nome completo <span class="required">*</span></label>
+            <input
+              class="form-input"
+              type="text"
+              id="nome"
+              name="nome"
+              placeholder="Ex.: João Silva"
+              required
+            />
+          </div>
+
+          <!-- E-mail -->
+          <div class="form-group">
+            <label class="form-label" for="email">E-mail <span class="required">*</span></label>
+            <input
+              class="form-input"
+              type="email"
+              id="email"
+              name="email"
+              placeholder="seuemail@restaurante.com"
+              required
+            />
+          </div>
+
+          <!-- WhatsApp -->
+          <div class="form-group">
+            <label class="form-label" for="whatsapp">WhatsApp <span class="required">*</span></label>
+            <input
+              class="form-input"
+              type="tel"
+              id="whatsapp"
+              name="whatsapp"
+              placeholder="(11) 9 9999-9999"
+              required
+            />
+          </div>
+
+          <!-- Faturamento -->
+          <div class="form-group">
+            <span class="faturamento-label">
+              Faturamento mensal do restaurante <span class="required">*</span>
+            </span>
+            <div class="faturamento-grid">
+
+              <div class="faturamento-option">
+                <input type="radio" id="fat1" name="faturamento" value="inaugurou" required />
+                <label for="fat1">🌱 Acabou de inaugurar</label>
+              </div>
+
+              <div class="faturamento-option">
+                <input type="radio" id="fat2" name="faturamento" value="0-10k" />
+                <label for="fat2">📈 0 a 10K / mês</label>
+              </div>
+
+              <div class="faturamento-option">
+                <input type="radio" id="fat3" name="faturamento" value="10k-20k" />
+                <label for="fat3">💰 10K a 20K / mês</label>
+              </div>
+
+              <div class="faturamento-option">
+                <input type="radio" id="fat4" name="faturamento" value="20k+" />
+                <label for="fat4">🚀 Acima de 20K / mês</label>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- Submit -->
+          <button class="btn-form-submit" type="submit">
+            ✦ Testar Grátis
+          </button>
+
+          <p class="form-disclaimer">
+            Ao clicar em "Testar Grátis" você concorda com os<br>
+            <a href="#" style="color:var(--ifood-red);text-decoration:none;font-weight:600;">Termos de Uso</a>
+            e a
+            <a href="#" style="color:var(--ifood-red);text-decoration:none;font-weight:600;">Política de Privacidade</a>
+            do Anota AI.
+          </p>
+
+        </form>
+
+        <!-- SUCCESS STATE -->
+        <div class="form-success" id="formSuccess">
+          <div class="success-icon">🎉</div>
+          <div class="success-title">Tudo certo, parceiro!</div>
+          <p class="success-text">
+            Seu acesso gratuito está sendo preparado.<br>
+            Em instantes você receberá um <strong>WhatsApp</strong> com o link de acesso.
+          </p>
+          <a class="btn btn-hero-primary" href="#" style="color:var(--ifood-red);margin-top:0.5rem;box-shadow:0 4px 16px rgba(234,29,44,0.2);">
+            Voltar ao início
+          </a>
+        </div>
+
+      </div>
+      <!-- /hero-form-card -->
+
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════
+       SCRIPTS
+  ═══════════════════════════════════════════ -->
+  <script>
+
+    /* ── WhatsApp mask ── */
+    document.getElementById('whatsapp').addEventListener('input', function () {
+      let v = this.value.replace(/\D/g, '').substring(0, 11);
+      if (v.length > 6) {
+        v = '(' + v.substring(0,2) + ') ' + v.substring(2,7) + '-' + v.substring(7);
+      } else if (v.length > 2) {
+        v = '(' + v.substring(0,2) + ') ' + v.substring(2);
+      } else if (v.length > 0) {
+        v = '(' + v;
+      }
+      this.value = v;
+    });
+
+    /* ── Form validation & submit ── */
+    document.getElementById('trialForm').addEventListener('submit', function (e) {
+      e.preventDefault();
+
+      const nome      = document.getElementById('nome').value.trim();
+      const email     = document.getElementById('email').value.trim();
+      const whatsapp  = document.getElementById('whatsapp').value.trim();
+      const faturamento = document.querySelector('input[name="faturamento"]:checked');
+
+      let valid = true;
+
+      [document.getElementById('nome'),
+       document.getElementById('email'),
+       document.getElementById('whatsapp')].forEach(el => {
+        el.style.borderColor = '';
+        el.style.boxShadow   = '';
+      });
+
+      if (!nome) {
+        highlight(document.getElementById('nome'));
+        valid = false;
+      }
+      if (!email || !email.includes('@')) {
+        highlight(document.getElementById('email'));
+        valid = false;
+      }
+      if (!whatsapp || whatsapp.replace(/\D/g,'').length < 10) {
+        highlight(document.getElementById('whatsapp'));
+        valid = false;
+      }
+      if (!faturamento) {
+        document.querySelectorAll('.faturamento-option label').forEach(l => {
+          l.style.borderColor = '#EA1D2C';
+        });
+        valid = false;
+      }
+
+      if (valid) {
+        document.getElementById('trialForm').style.display    = 'none';
+        document.getElementById('formSuccess').classList.add('active');
+      }
+    });
+
+    function highlight(el) {
+      el.style.borderColor = '#EA1D2C';
+      el.style.boxShadow   = '0 0 0 3px rgba(234,29,44,0.15)';
+      el.focus();
+    }
+
+    /* ── Smooth scroll for nav links ── */
+    document.querySelectorAll('a[href^="#"]').forEach(a => {
+      a.addEventListener('click', function (e) {
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          e.preventDefault();
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      });
+    });
+
+    /* ── Nav active state on scroll ── */
+    const navLinks = document.querySelectorAll('.nav-link:not(.nav-cta)');
+    navLinks.forEach(link => {
+      link.addEventListener('click', function () {
+        navLinks.forEach(l => l.style.color = '');
+        this.style.color = '#EA1D2C';
+      });
+    });
+
+  </script>
+
+</body>
+</html>
